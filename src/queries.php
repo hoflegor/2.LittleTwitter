@@ -4,7 +4,7 @@
 
 $queryCreateDatabase = "CREATE DATABASE LittleTwitter";
 
-$quryCreateTableUsers = "
+$queryCreateTableUsers = "
                         CREATE TABLE users(
                         id INT AUTO_INCREMENT UNIQUE ,
                         username VARCHAR (255),
@@ -14,3 +14,13 @@ $quryCreateTableUsers = "
                         )
 ";
 
+$queryCreateTableTweet ="
+                        CREATE TABLE tweet(
+                        tweet_id INT NOT NULL AUTO_INCREMENT,
+                        user_id INT NOT NULL,
+                        text VARCHAR (140),
+                        creation_date DATE,
+                        PRIMARY KEY (tweet_id),
+                        FOREIGN KEY (user_id) REFERENCES users(id)
+                        )
+";

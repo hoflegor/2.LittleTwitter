@@ -1,6 +1,6 @@
 <?php
 
-require_once (__DIR__ . "/conn.php");
+//require_once (__DIR__ . "/conn.php");
 
 class User
 {
@@ -105,6 +105,26 @@ class User
         return null;
     }
 
+    static public function loadByUsername(mysqli $conn, $username){
+        $sql="SELECT * FROM users WHERE username='$username'";
+
+        $result=$conn->query($sql);
+
+        if ($result == true){
+            $row=$result->fetch_assoc();
+
+            $loadedUser=new User();
+            $loadedUser->id=$row['id'];
+            $loadedUser->username=$row['username'];
+            $loadedUser->email=$row['email'];
+            $loadedUser->hashedPassword=$row['hashed_password'];
+
+            return $loadedUser;
+
+        }
+        return null;
+    }
+
     static public function loadAllUsers(mysqli $conn){
         $sql="SELECT * FROM users";
         $ret=[];
@@ -139,6 +159,40 @@ class User
         return true;
     }
 
+    static public function register (mysqli $conn, $email, $username,
+                                     $password){
+
+
+        $sqlEmail="SELECT email FROM users WHERE email = '$email'";
+        $resultEmail=$conn->query($sqlEmail);
+
+        $sqlName="SELECT username FROM users WHERE username = '$username'";
+        $resultName=$conn->query($sqlName);
+
+        if($resultName->num_rows==1){
+            echo "<strong>!!</strong>Użytkownik o podanym loginie już istnieje
+                <strong>!!</strong><br>";
+            return false;
+        }
+        else {
+            if ($resultEmail->num_rows == 0) {
+                $newUser = new User();
+                $newUser->setUsername($username)
+                    ->setEmail($email)
+                    ->setPassword($password);
+                if ($newUser->saveToDB($conn) == true) {
+                    echo "**Dodano nowego użytkownika : $username";
+                    return true;
+                }
+                return false;
+            } else {
+                echo "<strong>!!</strong>Użytkownik o podanym adresie email jest już zarejestrowany<strong>!!</strong><br>";
+                return false;
+            }
+        }
+
+    }
+
 }
 
 //$newUser = new User();
@@ -152,11 +206,11 @@ class User
 //$newUser->setEmail("fake@ipsum.eu");
 //$newUser->setPassword("lalalalal");
 //$newUser->saveToDB($conn);
-
+//
 //var_dump (User::loadByUserId($conn,1));
 //var_dump (User::loadByUserId($conn,2));
 //var_dump (User::loadByUserId($conn,666));
-
+//
 //var_dump(User::loadAllUsers($conn));
 //
 //User::loadByUserId($conn,1)
@@ -165,8 +219,6 @@ class User
 //
 //var_dump(User::loadByUserId($conn,1));
 
-//$newUser = new User();
-//$newUser->setUsername("KillMe");
-//$newUser->setEmail("fake@kill.eu");
-//$newUser->setPassword("sialalalalal");
-//$newUser->saveToDB($conn);
+//User::loadByUserId($conn,5)->delete($conn);
+
+//var_dump(User::loadByUserUsername($conn,'Mikey'));

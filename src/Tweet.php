@@ -1,5 +1,5 @@
 <?php
-require_once (__DIR__ . "/conn.php");
+//require_once (__DIR__ . "/conn.php");
 class Tweet
 {
     private $id;
@@ -55,7 +55,7 @@ class Tweet
 
     public function savetoDB(mysqli $conn){
         if ($this->id==-1){
-            $sql="INSERT INTO tweet (user_id, text, creation_date) VALUES 
+            $sql="INSERT INTO tweet (id_user, text, creation_date) VALUES 
                   ('$this->userId', '$this->text','$this->creationDate')";
 
             $result=$conn->query($sql);
@@ -67,10 +67,10 @@ class Tweet
         }
         else{
             $sql="UPDATE tweet SET
-                  user_id='$this->userId',
+                  id_user='$this->userId',
                   text='$this->text',
                   creation_date='$this->creationDate'
-                  WHERE tweet_id='$id'
+                  WHERE id_tweet='$id'
                   ";
 
             $result=$conn->query($sql);
@@ -82,7 +82,7 @@ class Tweet
     }
 
     static public function loadTweetById(mysqli $conn, $id){
-        $sql="SELECT * FROM tweet WHERE tweet_id=$id";
+        $sql="SELECT * FROM tweet WHERE id_tweet=$id";
 
         $result=$conn->query($sql);
 
@@ -90,7 +90,7 @@ class Tweet
             $row=$result->fetch_assoc();
 
             $loadedTweet=new Tweet();
-            $loadedTweet->id=$row['tweet_id'];
+            $loadedTweet->id=$row['id_tweet'];
             $loadedTweet->text=$row['text'];
             $loadedTweet->creationDate=$row['creation_date'];
 
@@ -100,7 +100,7 @@ class Tweet
     }
 
     static public function loadAllTweetsByUserId(mysqli $conn, $id){
-        $sql="SELECT * FROM tweet WHERE user_id=$id";
+        $sql="SELECT * FROM tweet WHERE id_user=$id";
         $ret=[];
 
         $result=$conn->query($sql);
@@ -109,7 +109,7 @@ class Tweet
             foreach ($result as $row) {
 
                 $loadedTweet=new Tweet();
-                $loadedTweet->id=$row['tweet_id'];
+                $loadedTweet->id=$row['id_tweet'];
                 $loadedTweet->text=$row['text'];
                 $loadedTweet->creationDate=$row['creation_date'];
 
@@ -129,7 +129,7 @@ class Tweet
             foreach ($result as $row) {
 
                 $loadedTweet=new Tweet();
-                $loadedTweet->id=$row['tweet_id'];
+                $loadedTweet->id=$row['id_tweet'];
                 $loadedTweet->text=$row['text'];
                 $loadedTweet->creationDate=$row['creation_date'];
 
@@ -140,28 +140,28 @@ class Tweet
     }
 
 }
-
+//
 //$newTweet=new Tweet();
-//$newTweet->setUserId(2)->
-//            setText("Be inward.")->setCreationDate('2016-12-11');
+//$newTweet->setUserId(4)->
+//            setText("Be inward.")->setCreationDate('2016-12-11')->savetoDB($conn);
 //var_dump($newTweet);
-//
-//
+
+
 //$newTweet2=new Tweet();
-//$newTweet->setUserId(2)->
+//$newTweet->setUserId(3)->
 //setText("Disappear and you will be invented wisely.")->setCreationDate('2014-11-10');
 //var_dump($newTweet);
-
+//
 //$newTweet3=new Tweet();
-//$newTweet3->setUserId(1)->
+//$newTweet3->setUserId(4)->
 //setText("Result traps when you love with art.")->setCreationDate('2013-12-14');
 //$newTweet3->savetoDB($conn);
 //var_dump($newTweet3);
 //
 //$newTweet->savetoDB($conn);
-
+//
 //var_dump(Tweet::loadTweetById($conn,1));
-
+//
 //var_dump(Tweet::loadAllTweetsByUserId($conn, 2));
-
+//
 //var_dump(Tweet::loadAllTweets($conn));

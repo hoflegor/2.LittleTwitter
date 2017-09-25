@@ -130,6 +130,7 @@ class Tweet
 
                 $loadedTweet=new Tweet();
                 $loadedTweet->id=$row['id_tweet'];
+                $loadedTweet->userId=$row['id_user'];
                 $loadedTweet->text=$row['text'];
                 $loadedTweet->creationDate=$row['creation_date'];
 

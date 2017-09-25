@@ -1,0 +1,31 @@
+table {
+    border-collapse: collapse;
+    background-color: LightSteelBlue;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 24px 24px;
+    text-align: center;
+
+}
+
+th {
+    font-weight: bold;
+}
+
+#halfWidth {
+    width: 50%;
+}
+
+li{
+    display: inline;
+    float: left;
+    padding-left: 50px;
+
+}
+
+a {
+    color: #000066;
+}
+

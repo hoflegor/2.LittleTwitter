@@ -5,95 +5,75 @@
     <meta name="LittelTwitter"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/style.css">
     <title>LittelTwitter - strona główna</title>
-
 </head>
 <body>
+<h1><em>LittelTwitter - strona główna</em></h1>
+<hr>
+<ul>
+    <li><a href="index.php">Strona główna</a></li>
+    <li><a href="user_detail.php">Sczegóły profilu</a></li>
+    <li><a href="">lorem</a></li>
+    <?php
+    session_start();
+    if(isset($_SESSION['loggedUser'])){
+        echo "<li><a href='utils/logOut.php'>Wyloguj</a></li>";
+    }
+    ?>
+</ul>
+<br>
+<hr>
+
 
 <?php
 
-    require_once (__DIR__ . "/src/conn.php");
-    require_once (__DIR__ . "/src/Tweet.php");
+require_once(__DIR__ . "/utils/checkLog.php");
 
-    session_start();
+if ($log == true) {
 
-    if (!isset($_SESSION['loggedUser']) || $_SESSION['loggedUser']==null) {
-
-//        var_dump($_SESSION['loggedUser']);
-
-        echo "<h1>LOGOWANIE:</h1>
-              <form action=\"login.php\" method=\"post\">
-        <label>Login:<br>
-            <input type=\"text\" name=\"username\" placeholder=\"Tu podaj swój login\">
-        </label>
-        <br>
-        <label>Hasło:
-            <br>
-            <input type=\"password\" name=\"password\" placeholder=\"Tu podaj swoje hasło\">
-        </label>
-        <br>
-        <input type=\"submit\" value=\"Zaloguj się\">
-    </form>";
-
-        echo "<hr>";
-
-        echo "<h2>Jeśli nie posiadasz konta, <ins><a href='register.php'>zarejestruj się!</a></ins></h2>";
-
-    }
-    elseif($_SESSION['loggedUser']!=null){
-        $loggedUser=$_SESSION['loggedUser'];
-
-        require_once (__DIR__ . '/src/conn.php');
-
-        $sql="SELECT id FROM users WHERE username='$loggedUser'";
-        $result=$conn->query($sql);
-
-        foreach ($result as $row) {
-            $loggedUserId=$row['id'];
-        }
-
-        echo "
+    echo "
             <form action=\"\" method=\"post\">
-                <label><strong>Tweetnij, nowego tweeta:</strong><br>
+                <label><h2>Tweetnij, nowego tweeta:</h2></strong><br>
                     <textarea name=\"tweet\" cols=\"32\" rows=\"6\" maxlength=\"140\" placeholder=\"Maksymalna długość tweeta to 140 znaków!\"></textarea>
                 </label>
-                <p>
+                <br>
                     <input type=\"submit\" value=\"Tweet!!\">
-                </p>
             </form>
+            <hr>
             ";
 
-        if ($_SERVER['REQUEST_METHOD']=='POST'){
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            if ($_POST['tweet']==true && strlen($_POST['tweet'])>0){
+        require_once(__DIR__ . "/src/Tweet.php");
 
-                $tweet=$conn->real_escape_string($_POST['tweet']);
-                $creationDate=new DateTime();
+        if ($_POST['tweet'] == true && strlen($_POST['tweet']) > 0) {
 
-                $newTweet=new Tweet();
-                $newTweet->setUserId($loggedUserId)
-                    ->setText($tweet)
-                    ->setCreationDate
-                    ($creationDate->format('Y-m-d H:i:s'))
-                    ->savetoDB($conn);
+            $tweet = $conn->real_escape_string($_POST['tweet']);
+            $creationDate = new DateTime();
 
-                echo "<strong>Tweetnięto nowego tweeta</strong><br>" .
-                        $creationDate->format('Y-m-d / H:i:s');
+            $newTweet = new Tweet();
+            $newTweet->setUserId($loggedUserId)
+                ->setText($tweet)
+                ->setCreationDate
+                ($creationDate->format('Y-m-d H:i:s'))
+                ->savetoDB($conn);
 
-            }
+            echo "<strong>Tweetnięto nowego tweeta</strong><br>" .
+                $creationDate->format('Y-m-d / H:i:s');
+
+            $conn->close();
+            $conn = null;
 
         }
 
-        var_dump(Tweet::loadAllTweets($conn,$loggedUserId));
-
     }
-
+    require_once(__DIR__ . "/utils/allTweets.php");
+}
 
 
 ?>
 
+
 </body>
 </html>
-
-
-

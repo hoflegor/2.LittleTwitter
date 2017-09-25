@@ -1,6 +1,4 @@
 <?php
-require_once (__DIR__ . "/src/conn.php");
-require_once (__DIR__ . "/src/User.php");
 ?>
 
 <!doctype html>
@@ -17,9 +15,9 @@ require_once (__DIR__ . "/src/User.php");
 
 <?php
 
-if ($_SERVER['REQUEST_METHOD']!='POST') {
+if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 
-    echo "<form action=\"register.php\" method=\"post\">
+    echo "<form action=\"\" method=\"post\">
         <label>Mail:
             <br>
             <input type=\"email\" name=\"email\" placeholder=\"Tu wpisz swój email\">
@@ -44,27 +42,31 @@ if ($_SERVER['REQUEST_METHOD']!='POST') {
         <br>
         <input type=\"submit\" value=\"Zarejestruj się\">
     </form>";
-}
-else{
+} else {
+
+    require(__DIR__ . "/src/conn.php");
+
     if (isset($_POST['email']) == true &&
-        isset($_POST['name']) == true && strlen($_POST['name']) >=2 &&
-        isset($_POST['password']) == true && strlen ($_POST['password']) >= 6 &&
-        $_POST['password']==$_POST['repeatPassword']) {
+        isset($_POST['name']) == true && strlen($_POST['name']) >= 2 &&
+        isset($_POST['password']) == true && strlen($_POST['password']) >= 6 &&
+        $_POST['password'] == $_POST['repeatPassword']) {
 
-        $email=$conn->real_escape_string($_POST['email']);
-        $password=$conn->real_escape_string($_POST['password']);
-        $name=$conn->real_escape_string($_POST['name']);
+        $email = $conn->real_escape_string($_POST['email']);
+        $password = $conn->real_escape_string($_POST['password']);
+        $name = $conn->real_escape_string($_POST['name']);
 
-        User::register($conn, $email,$name,$password);
+        require(__DIR__ . "/src/User.php");
 
-    }
-    else {
+
+        User::register($conn, $email, $name, $password);
+
+        $conn->close();
+        $conn = null;
+
+    } else {
         echo "<strong>!!</strong>Wrong input - błędne lub niepełne dane <strong>!!</strong><br>";
     }
 }
-
-$conn->close();
-$conn = null;
 
 ?>
 

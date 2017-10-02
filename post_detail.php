@@ -9,18 +9,18 @@
     <title>LittleTwiter - szczegóły tweeta</title>
 </head>
 <body>
+<h1><em>LittelTwitter - szczegóły tweeta</em></h1>
+<hr>
 
 <?php
 
-session_start();
-
 require(__DIR__ . '/utils/checkLog.php');
 
-if ($log['stat'] == false) {
-    echo "<strong>!!</strong>Wrong input - no GET parametr<strong>!!</strong><br>";
-} else {
+if ($log['check'] == true) {
 
-    require(__DIR__ . '/src/conn.php');
+    require_once(__DIR__ . '/utils/menu.php');
+
+    require(__DIR__ . '/utils/conn.php');
 
     if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['idTweet'] != null) {
 
@@ -30,12 +30,14 @@ if ($log['stat'] == false) {
         require(__DIR__ . '/src/Comment.php');
         require (__DIR__ . '/src/User.php');
 
-        echo "<h1>Tweet :</h1>" . "<p>(" . (Tweet::loadTweetById($conn, $tweetId)
-                ->getCreationDate()) . ")</p>" .
-                Tweet::loadTweetById($conn, $tweetId)->getText() . "<hr>";
+
+        echo "<h1>Tweet użytkownika <em>" . $log['user']
+                . "</em>:</h1>" . "<p>(" .
+                (Tweet::loadTweetById($conn, $tweetId) ->getCreationDate()) .
+                ")</p>" . Tweet::loadTweetById($conn, $tweetId)->getText()
+                . "<hr>";
 
         echo "<h3>Komentarze:</h3>";
-
 
 
         foreach ((Comment::loadAllCommentsByTweetId($conn, $tweetId))
@@ -45,11 +47,15 @@ if ($log['stat'] == false) {
 
 
 
-            echo "**" . $user .
-                " (" . $comment->getCreationDate() . "):". "<br>" .
-                $comment->getText()
-                . "<br><br>"
-                ;
+//            echo "**" . $user .
+//                " (" . $comment->getCreationDate() . "):". "<br>" .
+//                $comment->getText()
+//                . "<br><br>"
+//                ;
+
+            echo "<strong>**</strong>" . $user .
+                "(" . $comment->getCreationDate() . ")" . "<br>" .
+                "<em>" . $comment->getText() . "</em>" . "<br>" . "<br>";
 
         }
 

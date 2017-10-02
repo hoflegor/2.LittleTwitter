@@ -1,7 +1,5 @@
 <?php
 
-//require_once (__DIR__ . "/conn.php");
-
 class User
 {
     private $id;
@@ -181,7 +179,8 @@ class User
                     ->setEmail($email)
                     ->setPassword($password);
                 if ($newUser->saveToDB($conn) == true) {
-                    echo "**Dodano nowego użytkownika : $username";
+                    echo "<strong>**Dodano nowego użytkownika:
+                            <em>$username</em></strong>";
                     return true;
                 }
                 return false;

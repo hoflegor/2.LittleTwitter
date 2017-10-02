@@ -101,7 +101,7 @@ class Tweet
     }
 
     static public function loadAllTweetsByUserId(mysqli $conn, $id){
-        $sql="SELECT * FROM tweet WHERE id_user=$id";
+        $sql="SELECT * FROM tweet WHERE id_user=$id ORDER BY id_tweet DESC";
         $ret=[];
 
         $result=$conn->query($sql);

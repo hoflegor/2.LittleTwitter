@@ -14,7 +14,7 @@ if (isset($_SESSION['loggedUser']) && $_SESSION['loggedUser']!=null) {
     require_once (__DIR__ . '/../login.php');
 
     echo "<hr>Jeśli nie masz konta,
-            <a href='../register.php'>
+            <a href='register.php'>
             <ins><strong>zarejestruj się</strong></ins>
             </a>!!";
 

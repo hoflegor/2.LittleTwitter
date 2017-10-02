@@ -9,15 +9,46 @@
     <title>LittelTwitter - szczegóły profilu</title>
 </head>
 <body>
-<?php
-session_start();
+<h1><em>LittelTwitter - szczegóły profilu</em></h1>
+<hr>
 
-//var_dump($log['stat']);
+<?php
 
 require_once (__DIR__ . "/utils/checkLog.php");
 
-if($log['stat']==true){
-    require (__DIR__ . "/utils/allTweets.php");
+if($log['check']==true){
+
+    require_once(__DIR__ . '/utils/menu.php');
+
+    echo "<p><strong>Zalogowany użytkownik: <em>" . $log['user'] .
+        "</em></strong></p>";
+
+    require_once (__DIR__ . '/utils/conn.php');
+    require_once (__DIR__ . '/src/Tweet.php');
+    require_once (__DIR__ . '/src/User.php');
+
+    echo "<strong>Twoje Tweety: </strong><br>";
+
+    $id=User::loadByUsername($conn,$log['user'])->getId();
+
+    $tweets=Tweet::loadAllTweetsByUserId($conn, $id);
+
+    foreach ($tweets as $tweet){
+        echo "<br>";
+
+        $text=$tweet->getText();
+        $date=$tweet->getCreationDate();
+        $id=$tweet->getId();
+
+        echo "<strong>**</strong>" . "<ins>$date</ins> " . "<br>" .
+            "<em>$text</em>" . "<br>" .
+            "<a href='post_detail.php?idTweet=$id'> Pokaż szczegóły tweeta</a>".
+            "<br>";
+    }
+
+    $conn->close();
+    $conn = null;
+
 }
 
 ?>

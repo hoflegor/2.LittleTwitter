@@ -18,7 +18,11 @@ require(__DIR__ . '/utils/checkLog.php');
 
 if ($log['check'] == true) {
 
+    require(__DIR__ . '/utils/conn.php');
     require_once(__DIR__ . '/utils/menu.php');
+
+    echo "<p><strong>Zalogowany użytkownik: <em>" . $log['user'] .
+            "</em></strong></p    >";
 
     echo "
             <form action=\"\" method=\"post\">
@@ -28,32 +32,29 @@ if ($log['check'] == true) {
                 <br>
                     <input type=\"submit\" value=\"Tweet!!\">
             </form>
-            <hr>
-            ";
+            <hr>";
+
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST' &&
         $_POST['tweet'] == true && strlen($_POST['tweet']) > 0
     ) {
 
         require_once(__DIR__ . "/src/Tweet.php");
-
-        require(__DIR__ . "/src/conn.php");
+        require (__DIR__ ."/src/User.php");
+        require(__DIR__ . "/utils/conn.php");
 
         $tweet = $conn->real_escape_string($_POST['tweet']);
         $creationDate = new DateTime();
+        $id=User::loadByUsername($conn,$log['user'])->getId();
 
+        Tweet::createTweet($conn, $id, $tweet, $creationDate);
 
-        Tweet::createTweet($conn, $log['id'], $tweet, $creationDate);
+        header('Location: '.$_SERVER['PHP_SELF']);
+        die;
 
-        $newTweetEcho = "<strong>Tweetnięto nowego tweeta:</strong><br>" .
-            $creationDate->format('Y-m-d H:i:s');
-
-        $conn->close();
-        $conn = null;
 
     }
 
-    require(__DIR__ . '/utils/conn.php');
     require(__DIR__ . '/src/Tweet.php');
     require(__DIR__ . '/src/User.php');
 

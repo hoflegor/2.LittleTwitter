@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     </form>";
 } else {
 
-    require(__DIR__ . "/src/conn.php");
+    require(__DIR__ . "/utils/conn.php");
 
     if (isset($_POST['email']) == true &&
         isset($_POST['name']) == true && strlen($_POST['name']) >= 2 &&

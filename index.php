@@ -11,26 +11,14 @@
 <body>
 <h1><em>LittelTwitter - strona główna</em></h1>
 <hr>
-<ul>
-    <li><a href="index.php">Strona główna</a></li>
-    <li><a href="user_detail.php">Sczegóły profilu</a></li>
-    <li><a href="">lorem</a></li>
-    <?php
-    session_start();
-    if(isset($_SESSION['loggedUser'])){
-        echo "<li><a href='utils/logOut.php'>Wyloguj</a></li>";
-    }
-    ?>
-</ul>
-<br>
-<hr>
-
 
 <?php
+require(__DIR__ . '/utils/checkLog.php');
 
-require_once(__DIR__ . "/utils/checkLog.php");
 
-if ($log == true) {
+if ($log['check'] == true) {
+
+    require_once(__DIR__ . '/utils/menu.php');
 
     echo "
             <form action=\"\" method=\"post\">
@@ -43,37 +31,89 @@ if ($log == true) {
             <hr>
             ";
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' &&
+        $_POST['tweet'] == true && strlen($_POST['tweet']) > 0
+    ) {
 
         require_once(__DIR__ . "/src/Tweet.php");
 
-        if ($_POST['tweet'] == true && strlen($_POST['tweet']) > 0) {
+        require(__DIR__ . "/src/conn.php");
 
-            $tweet = $conn->real_escape_string($_POST['tweet']);
-            $creationDate = new DateTime();
+        $tweet = $conn->real_escape_string($_POST['tweet']);
+        $creationDate = new DateTime();
 
-            $newTweet = new Tweet();
-            $newTweet->setUserId($loggedUserId)
-                ->setText($tweet)
-                ->setCreationDate
-                ($creationDate->format('Y-m-d H:i:s'))
-                ->savetoDB($conn);
 
-            echo "<strong>Tweetnięto nowego tweeta</strong><br>" .
-                $creationDate->format('Y-m-d / H:i:s');
+        Tweet::createTweet($conn, $log['id'], $tweet, $creationDate);
 
-            $conn->close();
-            $conn = null;
+        $newTweetEcho = "<strong>Tweetnięto nowego tweeta:</strong><br>" .
+            $creationDate->format('Y-m-d H:i:s');
 
-        }
+        $conn->close();
+        $conn = null;
 
     }
-    require_once(__DIR__ . "/utils/allTweets.php");
-}
 
+    require(__DIR__ . '/utils/conn.php');
+    require(__DIR__ . '/src/Tweet.php');
+    require(__DIR__ . '/src/User.php');
+
+    echo "<table>
+    <thead>
+    <tr>
+        <h2>Tweety:</h2>
+    </tr>
+    </thead>
+    <tr>
+        <th scope='col'>Kto tweetnął</th>
+        <th scope='col'>Kiedy Tweetnął</th>
+        <th scope='col'>Co tweetnął</th>
+    </tr>";
+
+    $tweets = Tweet::loadAllTweets($conn);
+
+    foreach ($tweets as $tweet) {
+
+        $userId = $tweet->getUserId();
+        $tweetId = $tweet->getId();
+
+        $sql = "SELECT username AS name, t.text AS text,
+              t.creation_date AS tweet_date FROM users u JOIN tweet t
+              WHERE t.id_user=$userId AND u.id=t.id_user
+              AND t.id_tweet=$tweetId";
+
+        $result = $conn->query($sql);
+
+
+        if ($result == true && $result->num_rows != 0) {
+            foreach ($result AS $row) {
+                $name = $row['name'];
+                $text = $row['text'];
+                $date = $row['tweet_date'];
+                echo "
+            <tr>
+                <td>
+                $name
+                </td>
+                <td>
+                $date
+                </td>
+                <td>
+                $text
+                </td>
+            <tr>";
+
+            }
+        }
+    }
+
+
+    $conn->close();
+    $conn = null;
+
+}
 
 ?>
 
-
+</table>
 </body>
 </html>

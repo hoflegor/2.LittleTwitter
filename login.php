@@ -19,7 +19,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 
     session_start();
 
-    require (__DIR__ . "/src/conn.php");
+    require (__DIR__ . "/utils/conn.php");
 
     $username=$conn->real_escape_string($_POST['username']);
     $password=$conn->real_escape_string($_POST['password']);
@@ -29,12 +29,13 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 
     if ($user && password_verify($password, $user->getHashedPassword())){
         $_SESSION["loggedUser"]=$username;
-        echo "<h2>**Zalogowano użytkownika:$username</h2> 
+        echo "<h2>**Zalogowano użytkownika: <em>$username</em></h2> 
                 <a href='index.php'>Przejdź do strony głównej</a> ";
 
     }
     else{
-        echo "<h2>**Podano błędny login lub hasło</h2>";
+        echo "<h2>**Podano błędny login lub hasło</h2>
+                <a href='index.php'>Przejdź do strony głównej</a>";
     }
 
     $conn->close();

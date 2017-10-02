@@ -57,7 +57,7 @@ class User
         return $this->email;
     }
 
-    public function saveToDB(mysqli $conn){
+    private function saveToDB(mysqli $conn){
         if ($this->id == -1){
             //Saving to DB
             $sql = "INSERT INTO users (username, email, hashed_password) VALUES

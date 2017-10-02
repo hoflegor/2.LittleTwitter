@@ -1,5 +1,5 @@
 <?php
-//require_once (__DIR__ . "/conn.php");
+
 class Tweet
 {
     private $id;
@@ -53,7 +53,7 @@ class Tweet
         return $this->creationDate;
     }
 
-    public function savetoDB(mysqli $conn){
+    private function savetoDB(mysqli $conn){
         if ($this->id==-1){
             $sql="INSERT INTO tweet (id_user, text, creation_date) VALUES 
                   ('$this->userId', '$this->text','$this->creationDate')";
@@ -91,6 +91,7 @@ class Tweet
 
             $loadedTweet=new Tweet();
             $loadedTweet->id=$row['id_tweet'];
+            $loadedTweet->userId=$row['id_tweet'];
             $loadedTweet->text=$row['text'];
             $loadedTweet->creationDate=$row['creation_date'];
 
@@ -120,7 +121,7 @@ class Tweet
     }
 
     static public function loadAllTweets(mysqli $conn){
-        $sql="SELECT * FROM tweet";
+        $sql="SELECT * FROM tweet  ORDER BY id_tweet DESC";
         $ret=[];
 
         $result=$conn->query($sql);
@@ -138,6 +139,18 @@ class Tweet
             }
         }
         return $ret;
+    }
+
+    static public function createTweet(
+                            mysqli $conn, $loggedUserId, $tweet, $creationDate){
+
+        $newTweet = new Tweet();
+        $newTweet->setUserId($loggedUserId)
+            ->setText($tweet)
+            ->setCreationDate
+            ($creationDate->format('Y-m-d // H:i:s'))
+            ->savetoDB($conn);
+
     }
 
 }

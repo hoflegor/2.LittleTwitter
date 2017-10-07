@@ -1,5 +1,7 @@
 <?php
 
+require_once(__DIR__ . '/../utils/conn.php');
+
 class Comment
 {
 
@@ -24,9 +26,9 @@ class Comment
         return $this;
     }
 
-    public function setTweetId($TweetId)
+    public function setTweetId($tweetId)
     {
-        $this->TweetId = $TweetId;
+        $this->tweetId = $tweetId;
         return $this;
     }
 
@@ -54,7 +56,7 @@ class Comment
 
     public function getTweetId()
     {
-        return $this->TweetId;
+        return $this->tweetId;
     }
 
     public function getText()
@@ -90,7 +92,7 @@ class Comment
 
     static public function loadAllCommentsByTweetId(mysqli $conn, $id)
     {
-        $sql = "SELECT * FROM comment WHERE id_tweet=$id ORDER BY creation_date DESC ";
+        $sql = "SELECT * FROM comment WHERE id_tweet=$id ORDER BY id_comment DESC ";
         $ret = [];
 
         $result = $conn->query($sql);
@@ -123,40 +125,46 @@ class Comment
                 $this->id = $conn->insert_id;
                 return true;
             }
-        } else {
-            $sql = "UPDATE comment SET
-                  id_user='$this->userId',
-                  id_tweet='$this->tweetId',
-                  text='$this->text',
-                  creation_date='$this->creationDate'
-                  WHERE id_comment='$id'
-                  ";
-
-            $result = $conn->query($sql);
-            if ($result == true) {
-                return true;
-            }
         }
-        return false;
+// else {
+//            $sql = "UPDATE comment SET
+//                  id_user='$this->userId',
+//                  id_tweet='$this->tweetId',
+//                  text='$this->text',
+//                  creation_date='$this->creationDate'
+//                  WHERE id_comment='$id'
+//                  ";
+//
+//            $result = $conn->query($sql);
+//            if ($result == true) {
+//                return true;
+//            }
+        else {
+            return false;
+        }
     }
 
     static public function createComment(
-        mysqli $conn, $loggedUserId, $tweetId, $text, $creationDate)
+        mysqli $conn, $userId, $tweetId, $text, $creationDate)
     {
 
         $newComment = new Comment();
-        $newComment->setUserId($loggedUserId)
+        $newComment->setUserId($userId)
             ->setTweetId($tweetId)
             ->setText($text)
             ->setCreationDate
             ($creationDate->format('Y-m-d // H:i:s'))
             ->saveToDB($conn);
 
+        return $newComment;
+
     }
+
+
 }
 
 
 //var_dump(Comment::loadAllCommentsByTweetId($conn, 16));
 //var_dump(Comment::loadCommentById($conn, 2));
 
-//Comment::createComment($conn,8, 6, 'umbabaraumba', '2016-12-14 14:12:15');
+//var_dump(Comment::createComment($conn,8,16, 'dsddsdsfsdffs', '2016-06-22 12:22:21'));

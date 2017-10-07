@@ -11,7 +11,6 @@
 <body>
 <h1><em>LittelTwitter - szczegóły tweeta</em></h1>
 <hr>
-
 <?php
 
 require(__DIR__ . '/utils/checkLog.php');
@@ -19,52 +18,91 @@ require(__DIR__ . '/utils/checkLog.php');
 if ($log['check'] == true) {
 
     require_once(__DIR__ . '/utils/menu.php');
-
     require(__DIR__ . '/utils/conn.php');
+    require(__DIR__ . '/src/Tweet.php');
+    require(__DIR__ . '/src/Comment.php');
+    require(__DIR__ . '/src/User.php');
 
-    if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['idTweet'] != null) {
+    echo "<p><strong>Zalogowany użytkownik:  <br><em>" . $log['user'] .
+        "</em></strong></p><hr>";
+
+
+    if ($_SERVER['REQUEST_METHOD'] == 'GET' &&
+        $_GET['name'] != null &&
+        $_GET['idTweet'] != null) {
+
 
         $tweetId = $_GET['idTweet'];
+        $name = $_GET['name'];
 
-        require(__DIR__ . '/src/Tweet.php');
-        require(__DIR__ . '/src/Comment.php');
-        require (__DIR__ . '/src/User.php');
+        $tweetText = Tweet::loadTweetById($conn, $tweetId)->getText();
 
+        echo "<h1>Tweet użytkownika <em>" . $name
+            . "</em>:</h1>" . "<p>(" .
+            (Tweet::loadTweetById($conn, $tweetId)->getCreationDate()) .
+            ")</p>" . $tweetText
+            . "<hr>";
+        ?>
 
-        echo "<h1>Tweet użytkownika <em>" . $log['user']
-                . "</em>:</h1>" . "<p>(" .
-                (Tweet::loadTweetById($conn, $tweetId) ->getCreationDate()) .
-                ")</p>" . Tweet::loadTweetById($conn, $tweetId)->getText()
-                . "<hr>";
+        <form action='' method="post">
+            <label><h2>Dodaj komentarz do Tweeta:</h2></strong><br>
+                <textarea name="comment" cols="32" rows="6" maxlength="60"
+                          placeholder="Maksymalna długość komentarza to 60 znaków!"></textarea>
+            </label>
+            <input type="hidden" name="idTweet" value="<?= $tweetId ?>">
+            <br>
+            <input type="submit" value="Skomentuj!!">
+        </form>
+        <hr>
+
+        <?php
 
         echo "<h3>Komentarze:</h3>";
 
-
         foreach ((Comment::loadAllCommentsByTweetId($conn, $tweetId))
-            as $comment){
+            as $comment) {
 
-            $user=User::loadByUserId($conn,($comment->getUserId()))->getUsername();
-
-
-
-//            echo "**" . $user .
-//                " (" . $comment->getCreationDate() . "):". "<br>" .
-//                $comment->getText()
-//                . "<br><br>"
-//                ;
+            $user = User::loadByUserId($conn, ($comment->getUserId()))->getUsername();
 
             echo "<strong>**</strong>" . $user .
-                "(" . $comment->getCreationDate() . ")" . "<br>" .
+                " (" . $comment->getCreationDate() . ")" . "<br>" .
                 "<em>" . $comment->getText() . "</em>" . "<br>" . "<br>";
+
 
         }
 
-        $conn->close();
-        $conn = null;
+
+        ?>
+
+
+        <?php
 
 
     }
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' &&
+        $_POST['comment'] == true && strlen($_POST['comment']) > 0
+    ) {
+
+        $userId = User::loadByUsername($conn, $log['user'])->getId();
+
+        $comment = $conn->real_escape_string($_POST['comment']);
+        $creationDate = new DateTime();
+        $textComment = $_POST['comment'];
+        $userId = User::loadByUsername($conn, $log['user'])->getId();
+
+        Comment::createComment($conn, $userId, $_POST['idTweet'],
+            $textComment, $creationDate);
+
+        header('Location:'.$_SERVER['REQUEST_URI']);
+
+    }
+
+    $conn->close();
+    $conn = null;
+
 }
+
 ?>
 </body>
 </html>

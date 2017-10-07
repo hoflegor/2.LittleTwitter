@@ -168,8 +168,7 @@ class User
         $resultName=$conn->query($sqlName);
 
         if($resultName->num_rows==1){
-            echo "<strong>!!</strong>Użytkownik o podanym loginie już istnieje
-                <strong>!!</strong><br>";
+            echo "<strong>Użytkownik o podanym loginie jest już dodany, innego podanie, to czyn zalecany!!</strong><br>";
             return false;
         }
         else {
@@ -179,13 +178,14 @@ class User
                     ->setEmail($email)
                     ->setPassword($password);
                 if ($newUser->saveToDB($conn) == true) {
-                    echo "<strong>**Dodano nowego użytkownika:
-                            <em>$username</em></strong>";
+                    header("refresh:4 ;url=index.php");
+                    echo "<strong><em>$username</em> Właśnie zostałeś zarejestrowany :-) Za 4 sekundy będziesz też zalogowany...
+                            </strong>";
                     return true;
                 }
                 return false;
             } else {
-                echo "<strong>!!</strong>Użytkownik o podanym adresie email jest już zarejestrowany<strong>!!</strong><br>";
+                echo "<strong>Uzytkownik o podanym mailu został już dodany, inny prze Ciebie musi być wpisany!!</strong><br>";
                 return false;
             }
         }

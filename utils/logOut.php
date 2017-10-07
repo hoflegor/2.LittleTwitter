@@ -2,5 +2,6 @@
 session_start();
 
 unset($_SESSION['loggedUser']);
-echo "Wylogowałeś się z LittelTwitter ;-(<br>
-    <a href='../index.php'>Przejdź do strony głównej</a> ";
+header("refresh: 8 ../index.php");
+echo "<h1>Jako, że Ty wychodzisz, to my będziemy się smucić ;-( <br><br>
+            Za 8 sekund ten tekst zniknie, a Ty może zechcesz wrócić?</h1>";

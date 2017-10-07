@@ -20,32 +20,39 @@ if($log['check']==true){
 
     require_once(__DIR__ . '/utils/menu.php');
 
-    echo "<p><strong>Zalogowany użytkownik: <em>" . $log['user'] .
-        "</em></strong></p>";
+    echo "<p><strong>Zalogowany użytkownik:  <br><em>" . $log['user'] .
+        "</em></strong></p><hr>";
 
     require_once (__DIR__ . '/utils/conn.php');
     require_once (__DIR__ . '/src/Tweet.php');
     require_once (__DIR__ . '/src/User.php');
 
-    echo "<strong>Twoje Tweety: </strong><br>";
+    if($_SERVER['REQUEST_METHOD'] == 'GET' &&
+        $_GET['name'] != null &&
+        $_GET['idUser'] != null) {
 
-    $id=User::loadByUsername($conn,$log['user'])->getId();
+        $idUser=$_GET['idUser'];
+        $name=$_GET['name'];
 
-    $tweets=Tweet::loadAllTweetsByUserId($conn, $id);
+        echo "<p><strong><em>Tweety użytkownika $name:</em></strong></p><hr>";
 
-    foreach ($tweets as $tweet){
-        echo "<br>";
+        $tweets = Tweet::loadAllTweetsByUserId($conn, $idUser);
 
-        $text=$tweet->getText();
-        $date=$tweet->getCreationDate();
-        $id=$tweet->getId();
+        foreach ($tweets as $tweet) {
+            echo "<br>";
 
-        echo "<strong>**</strong>" . "<ins>$date</ins> " . "<br>" .
-            "<em>$text</em>" . "<br>" .
-            "<a href='post_detail.php?idTweet=$id'> Pokaż szczegóły tweeta</a>".
-            "<br>";
+            $text = $tweet->getText();
+            $date = $tweet->getCreationDate();
+            $id = $tweet->getId();
+            $count = Tweet::countComment($conn, $id);
+
+            echo "<strong>**</strong>" . "<ins>$date</ins> " . "<br>" .
+                "<em>$text</em>" . "<br>" .
+                "<strong>*</strong>Liczba komentarzy: $count" . "<br>" .
+                "<a href='post_detail.php?idTweet=$id&name=$name'> Pokaż szczegóły/komentarze</a>" .
+                "<br>";
+        }
     }
-
     $conn->close();
     $conn = null;
 

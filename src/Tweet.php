@@ -153,6 +153,17 @@ class Tweet
 
     }
 
+    static public function countComment(mysqli $conn, $tweetId){
+
+        $sql="SELECT * FROM comment WHERE id_tweet=$tweetId";
+        $result=$conn->query($sql);
+
+        $counter=$result->num_rows;
+
+        return $counter;
+
+    }
+
 }
 //
 //$newTweet=new Tweet();

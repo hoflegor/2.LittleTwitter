@@ -7,14 +7,4 @@ Celem warsztatów jest napisanie pełnej i funkcjonalnej aplikacji w stylu Twitt
        width="80" height="15" alt="WTFPL" /> © 2017 WTFPL – Do What the Fuck You Want to Public License.</a>
        
 ## Author
-
 hoflegor
-
-```php
-use My\Super\Library\Class;
-
-$data = [[1, 3], [1, 4], [2, 4], [3, 1], [4, 1], [4, 2]];
-
-$object = new Class(1, 2, 3)
-$object->makeAwesome($data);
-```

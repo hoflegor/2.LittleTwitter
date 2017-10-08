@@ -9,3 +9,12 @@ Celem warsztatów jest napisanie pełnej i funkcjonalnej aplikacji w stylu Twitt
 ## Author
 
 hoflegor
+
+```php
+use My\Super\Library\Class;
+
+$data = [[1, 3], [1, 4], [2, 4], [3, 1], [4, 1], [4, 2]];
+
+$object = new Class(1, 2, 3)
+$object->makeAwesome($data);
+```

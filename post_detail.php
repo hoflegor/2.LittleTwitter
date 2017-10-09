@@ -18,7 +18,6 @@ require(__DIR__ . '/utils/checkLog.php');
 if ($log['check'] == true) {
 
     require_once(__DIR__ . '/utils/menu.php');
-    require(__DIR__ . '/utils/conn.php');
     require(__DIR__ . '/src/Tweet.php');
     require(__DIR__ . '/src/Comment.php');
     require(__DIR__ . '/src/User.php');
@@ -37,8 +36,8 @@ if ($log['check'] == true) {
 
         $tweetText = Tweet::loadTweetById($conn, $tweetId)->getText();
 
-        echo "<h1>Tweet użytkownika <em>" . $name
-            . "</em>:</h1>" . "<p>(" .
+        echo "<p><h3><ins>Tweet użytkownika <em>" . $name
+            . "</em>:</ins></h3></p>" . "<p>(" .
             (Tweet::loadTweetById($conn, $tweetId)->getCreationDate()) .
             ")</p>" . $tweetText
             . "<hr>";
@@ -101,6 +100,14 @@ if ($log['check'] == true) {
     $conn->close();
     $conn = null;
 
+}
+else{
+    echo "<h2>LittelTwitter jest dosyć cwany - by mieć pełen dostęp musisz być
+            <a href='login.php'><strong>zalogowany!!</strong></a></h2><hr>";
+
+    echo "<h2>Jeśli nie masz konta, zbędne narzekanie - czas na 
+            <a href='register.php'>
+            <strong>zarejestrowanie!!</strong></h2></a>";
 }
 
 ?>

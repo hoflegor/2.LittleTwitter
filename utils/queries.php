@@ -31,8 +31,22 @@ $queryCreateTableComment = "
                           id_user INT NOT NULL,
                           id_tweet INT NOT NULL,
                           text VARCHAR (60),
-                          creation_date DATE,
+                          creation_date DATETIME,
                           PRIMARY KEY (id_comment),
                           FOREIGN KEY (id_tweet) REFERENCES tweet(id_tweet)
                             )
+";
+
+$queryCreateTableMessage="
+                        CREATE TABLE messages(
+                        id_message INT NOT NULL AUTO_INCREMENT,
+                        id_sender INT NOT NULL,
+                        id_receiver INT NOT NULL,
+                        text VARCHAR (255),
+                        creation_date DATETIME,
+                        status TINYINT(1) NOT NULL,
+                        PRIMARY KEY (id_message),
+                        FOREIGN KEY (id_sender) REFERENCES users (id),
+                        FOREIGN KEY (id_receiver) REFERENCES users (id)
+                        )
 ";

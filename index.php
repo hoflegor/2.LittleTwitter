@@ -29,8 +29,6 @@ if ($log['check'] == false) {
 else {
 
     require_once(__DIR__ . '/utils/menu.php');
-    require_once(__DIR__ . '/utils/conn.php');
-    require_once(__DIR__ . '/utils/menu.php');
     require_once(__DIR__ . "/src/Tweet.php");
     require_once(__DIR__ . "/src/User.php");
 
@@ -39,7 +37,7 @@ else {
 
     echo "
             <form action=\"\" method=\"post\">
-                <label><h2>Tweetnij, nowego tweeta:</h2></strong><br>
+                <label><ins><h2>Tweetnij, nowego tweeta:</h2></ins><br>
                     <textarea name=\"tweet\" cols=\"32\" rows=\"6\" maxlength=\"140\" placeholder=\"Maksymalna długość tweeta to 140 znaków!\"></textarea>
                 </label>
                 <br>
@@ -106,7 +104,7 @@ else {
                 echo "
             <tr>
                 <td>
-                $name<br><a href='user_detail.php?idUser=$userId&name=$name'>--->szczegóły użytkownika</a>
+                $name<br><a href='user_detail.php?&name=$name'>--->szczegóły użytkownika</a>
                 </td>
                 <td>
                 $date
@@ -127,7 +125,7 @@ else {
 
 ?>
 
-<!--TODO Mam wątpliwości do jakości powyższego kodu HTML (sposobu "echowania" tabeli i formularza)... Jest w miarę ok? W jaki inny sposób można stworzyć tabelę częściowo generowaną z php, tak by kod HTML był czytelniejszy?-->
+<!--TODO Mam wątpliwości do jakości kodu HTML ( szczególnie sposobu "echowania" tabeli i formularza)... Jest w miarę ok? W jaki inny sposób można stworzyć tabelę częściowo generowaną z php, tak by kod HTML był czytelniejszy?-->
 
 </table>
 </body>

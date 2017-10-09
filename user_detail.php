@@ -14,27 +14,45 @@
 
 <?php
 
-require_once (__DIR__ . "/utils/checkLog.php");
+require_once(__DIR__ . "/utils/checkLog.php");
 
-if($log['check']==true){
+if ($log['check'] == true) {
 
     require_once(__DIR__ . '/utils/menu.php');
 
     echo "<p><strong>Zalogowany użytkownik:  <br><em>" . $log['user'] .
         "</em></strong></p><hr>";
 
-    require_once (__DIR__ . '/utils/conn.php');
-    require_once (__DIR__ . '/src/Tweet.php');
-    require_once (__DIR__ . '/src/User.php');
+    require_once(__DIR__ . '/src/Tweet.php');
+    require_once(__DIR__ . '/src/User.php');
 
-    if($_SERVER['REQUEST_METHOD'] == 'GET' &&
-        $_GET['name'] != null &&
-        $_GET['idUser'] != null) {
 
-        $idUser=$_GET['idUser'];
-        $name=$_GET['name'];
+    if ($_SERVER['REQUEST_METHOD'] == 'GET' &&
+        $_GET['name'] != null) {
 
-        echo "<p><strong><em>Tweety użytkownika $name:</em></strong></p><hr>";
+
+        $name = $_GET['name'];
+        $idUser = User::loadByUsername($conn,$name)->getId();
+
+        if ($name != $log['user']) {
+
+            $form=<<<EOL
+<form action="utils/newMessage.php" method="get">
+    <button name="sendTo" value="$name">Wyślij wiadomość do użytkownika $name</button>
+</form>
+EOL;
+            echo $form;
+        }
+
+        echo "<p><h3><ins>Szczegóły profilu użytkownika $name:</ins></h3></p>
+<hr>
+";
+        echo "dołączył:<br>tweety:";
+
+        echo "<p><strong><em>Tweety użytkownika $name:</em></strong></p>
+<hr>
+";
+
 
         $tweets = Tweet::loadAllTweetsByUserId($conn, $idUser);
 
@@ -46,7 +64,9 @@ if($log['check']==true){
             $id = $tweet->getId();
             $count = Tweet::countComment($conn, $id);
 
-            echo "<strong>**</strong>" . "<ins>$date</ins> " . "<br>" .
+            echo "<strong>**</strong>" . "
+<ins>$date</ins>
+" . "<br>" .
                 "<em>$text</em>" . "<br>" .
                 "<strong>*</strong>Liczba komentarzy: $count" . "<br>" .
                 "<a href='post_detail.php?idTweet=$id&name=$name'> Pokaż szczegóły/komentarze</a>" .

@@ -79,15 +79,25 @@ if ($log['check'] == false) {
 
         $senderId = $message->getSenderId();
         $creationDate = $message->getCreationDate();
+        $messageId=$message->getId();
+        $status=$message->getStatus();
 
 
         if ($idUser == $senderId) {
             echo "<strong>Wysłana---></strong>";
         } else {
+            if ($status==0){
+                echo "<br><strong><ins>!!NOWA WIADOMOŚĆ!!</ins></strong><br><br>";
+            }
             echo "<strong>--->Odebrana:</strong>";
+
         }
-        echo "<br>($creationDate)<br>" .
-            $message->getText()
+
+
+
+        echo "<br>($creationDate)<br>"
+            . substr($message->getText(),0,30) . "...<br>"
+            . "<a href='message.php?messageId=$messageId'>--->Przejdź do szczegółów wiadomości</a>"
             . "<hr>";
 
     }

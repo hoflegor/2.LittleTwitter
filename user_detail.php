@@ -12,6 +12,16 @@
 <h1><em>LittelTwitter - szczegóły profilu</em></h1>
 <hr>
 
+
+<!--TODO-->
+<!--$changePass=<<<EOL-->
+<!--<form action="" method="post">-->
+<!--    <button name="change" >Zmień hasło</button>-->
+<!--</form>-->
+<!--EOL;-->
+<!---->
+<!--echo $changePass;-->
+
 <?php
 
 require_once(__DIR__ . "/utils/checkLog.php");
@@ -26,17 +36,31 @@ if ($log['check'] == true) {
     require_once(__DIR__ . '/src/Tweet.php');
     require_once(__DIR__ . '/src/User.php');
 
+    if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+
+//        TODO
+//        if (isset($_POST['change'])){
+//            $echo=<<<EOL
+//<form>
+//    <input type="password" name="old">
+//    <input type="password" name="new">
+//    <input type="password" name="newRep">
+//</form>
+//EOL;
+//
+//        }
+//
+//    }
 
     if ($_SERVER['REQUEST_METHOD'] == 'GET' &&
         $_GET['name'] != null) {
 
-
         $name = $_GET['name'];
-        $idUser = User::loadByUsername($conn,$name)->getId();
+        $idUser = User::loadByUsername($conn, $name)->getId();
 
         if ($name != $log['user']) {
 
-            $form=<<<EOL
+            $form = <<<EOL
 <form action="utils/newMessage.php" method="get">
     <button name="sendTo" value="$name">Wyślij wiadomość do użytkownika $name</button>
 </form>
@@ -47,7 +71,6 @@ EOL;
         echo "<p><h3><ins>Szczegóły profilu użytkownika $name:</ins></h3></p>
 <hr>
 ";
-        echo "dołączył:<br>tweety:";
 
         echo "<p><strong><em>Tweety użytkownika $name:</em></strong></p>
 <hr>

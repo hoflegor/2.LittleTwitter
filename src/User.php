@@ -6,12 +6,14 @@ class User
     private $username;
     private $hashedPassword;
     private $email;
+    private $creationDate;
 
     public function __construct()
     {
         $this->id = -1;
         $this->username = "";
         $this->email = "";
+        $creationDate = "";
         $this->hashedPassword = "";
     }
 
@@ -35,9 +37,23 @@ class User
         return $this;
     }
 
+
+    public function setCreationDate($creationDate)
+    {
+        $this->creationDate = $creationDate;
+        return $this;
+    }
+
+
+
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getCreationDate()
+    {
+        return $this->creationDate;
     }
 
     public function getUsername()

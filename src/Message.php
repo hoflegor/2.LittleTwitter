@@ -1,6 +1,6 @@
 <?php
 
-require_once (__DIR__ .  '/../utils/conn.php');
+require_once(__DIR__ . '/../utils/conn.php');
 
 class Message
 {
@@ -13,11 +13,11 @@ class Message
 
     public function __construct()
     {
-        $this->id=-1;
-        $this->senderId="";
-        $this->receiverId="";
-        $this->text="";
-        $this->creationDate="";
+        $this->id = -1;
+        $this->senderId = "";
+        $this->receiverId = "";
+        $this->text = "";
+        $this->creationDate = "";
         $this->setStatus();
     }
 
@@ -55,7 +55,6 @@ class Message
     }
 
 
-
     public function getId()
     {
         return $this->id;
@@ -87,125 +86,157 @@ class Message
     }
 
 
-
-    public function savToDB(mysqli $conn){
-        if($this->id=-1){
-            $sql="
+    public function savToDB(mysqli $conn)
+    {
+        if ($this->id = -1) {
+            $sql = "
               INSERT INTO messages (id_sender, id_receiver, text, creation_date, status)
               VALUES ($this->senderId, $this->receiverId, '$this->text', '$this->creationDate', $this->status)";
 
             var_dump($sql);
 
-            $result=$conn->query($sql);
+            $result = $conn->query($sql);
 
-            if ($result==true){
+            if ($result == true) {
                 return true;
             }
-                return false;
+            return false;
         }
     }
 
-    static public function loadAllMessagesBySenderId($conn, $senderId){
+    static public function loadMessageById(mysqli $conn, $id){
+        $sql = "SELECT * FROM messages WHERE id_message = $id";
 
-        $sql="SELECT * FROM messages WHERE id_sender = $senderId";
+        $result = $conn->query($sql);
 
-        $ret=[];
+        if ($result == true) {
 
-        $result=$conn->query($sql);
+            $row = $result->fetch_assoc();
+            foreach ($result as $row) {
 
-        if ($result==true){
-            foreach ($result as $row){
-                $loadedMessage=new message();
-                $loadedMessage->id=$row['id_message'];
-                $loadedMessage->senderId=$row['id_sender'];
-                $loadedMessage->receiverId=$row['id_receiver'];
-                $loadedMessage->text=$row['text'];
-                $loadedMessage->creationDate=$row['creation_date'];
-                $loadedMessage->status=$row['status'];
+                $loadedMessage = new Message();
 
-                $ret[]=$loadedMessage;
+                $loadedMessage->id = $row['id_message'];
+                $loadedMessage->senderId = $row['id_sender'];
+                $loadedMessage->receiverId = $row['id_receiver'];
+                $loadedMessage->text = $row['text'];
+                $loadedMessage->creationDate = $row['creation_date'];
+                $loadedMessage->status = $row['status'];
+
+                return $loadedMessage;
+
+            }
+
+        }
+    }
+
+    static public function loadAllMessagesBySenderId($conn, $senderId)
+    {
+
+        $sql = "SELECT * FROM messages WHERE id_sender = $senderId";
+
+        $ret = [];
+
+        $result = $conn->query($sql);
+
+        if ($result == true) {
+            foreach ($result as $row) {
+                $loadedMessage = new message();
+                $loadedMessage->id = $row['id_message'];
+                $loadedMessage->senderId = $row['id_sender'];
+                $loadedMessage->receiverId = $row['id_receiver'];
+                $loadedMessage->text = $row['text'];
+                $loadedMessage->creationDate = $row['creation_date'];
+                $loadedMessage->status = $row['status'];
+
+                $ret[] = $loadedMessage;
             }
         }
         return $ret;
     }
 
-    static public function loadAllMessagesSendOrReceive($conn,$id){
+    static public function loadAllMessagesSendOrReceive($conn, $id)
+    {
 
-        $sql="SELECT * FROM messages WHERE id_receiver = $id OR id_sender=$id ORDER BY id_message";
+        $sql = "SELECT * FROM messages WHERE id_receiver = $id OR id_sender=$id ORDER BY id_message";
 
-        $ret=[];
+        $ret = [];
 
-        $result=$conn->query($sql);
+        $result = $conn->query($sql);
 
-        if ($result==true){
-            foreach ($result as $row){
-                $loadedMessage=new message();
-                $loadedMessage->id=$row['id_message'];
-                $loadedMessage->senderId=$row['id_sender'];
-                $loadedMessage->receiverId=$row['id_receiver'];
-                $loadedMessage->text=$row['text'];
-                $loadedMessage->creationDate=$row['creation_date'];
-                $loadedMessage->status=$row['status'];
+        if ($result == true) {
+            foreach ($result as $row) {
+                $loadedMessage = new message();
+                $loadedMessage->id = $row['id_message'];
+                $loadedMessage->senderId = $row['id_sender'];
+                $loadedMessage->receiverId = $row['id_receiver'];
+                $loadedMessage->text = $row['text'];
+                $loadedMessage->creationDate = $row['creation_date'];
+                $loadedMessage->status = $row['status'];
 
-                $ret[]=$loadedMessage;
+                $ret[] = $loadedMessage;
             }
         }
         return $ret;
 
     }
 
-    static public function loadAllMessagesByReceiverId($conn, $receiverId){
+    static public function loadAllMessagesByReceiverId($conn, $receiverId)
+    {
 
-        $sql="SELECT * FROM messages WHERE id_receiver = $receiverId";
+        $sql = "SELECT * FROM messages WHERE id_receiver = $receiverId";
 
-        $ret=[];
+        $ret = [];
 
-        $result=$conn->query($sql);
+        $result = $conn->query($sql);
 
-        if ($result==true){
-            foreach ($result as $row){
-                $loadedMessage=new message();
-                $loadedMessage->id=$row['id_message'];
-                $loadedMessage->senderId=$row['id_sender'];
-                $loadedMessage->receiverId=$row['id_receiver'];
-                $loadedMessage->text=$row['text'];
-                $loadedMessage->creationDate=$row['creation_date'];
-                $loadedMessage->status=$row['status'];
+        if ($result == true) {
+            foreach ($result as $row) {
+                $loadedMessage = new message();
+                $loadedMessage->id = $row['id_message'];
+                $loadedMessage->senderId = $row['id_sender'];
+                $loadedMessage->receiverId = $row['id_receiver'];
+                $loadedMessage->text = $row['text'];
+                $loadedMessage->creationDate = $row['creation_date'];
+                $loadedMessage->status = $row['status'];
 
-                $ret[]=$loadedMessage;
+                $ret[] = $loadedMessage;
             }
         }
         return $ret;
     }
 
-    static public function setRead(mysqli $conn, $id){
-        $sql="UPDATE messages SET status=1 WHERE id_message=$id";
+    static public function markAsRead(mysqli $conn, $id)
+    {
+        $sql = "UPDATE messages SET status=1 WHERE id_message=$id";
 
-        $result=$conn->query($sql);
+        $result = $conn->query($sql);
 
-        if ($result==true){
+        if ($result == true) {
             return true;
         }
         return false;
     }
 
-    static public function newMessage(mysqli $conn, $senderId, $receiverId, $text, $creationDate){
+    static public function newMessage(mysqli $conn, $senderId, $receiverId, $text, $creationDate)
+    {
 
-        $newMessage=new Message();
+        $newMessage = new Message();
 
         $newMessage->setSenderId($senderId)
             ->setReceiverId($receiverId)
             ->setText($text)
             ->setCreationDate
-                ($creationDate->format('Y-m-d // H:i:s'))
+            ($creationDate->format('Y-m-d // H:i:s'))
             ->savToDB($conn);
 
         return $newMessage;
 
     }
 
-    public static function loadUnreadById($conn,$id){
-        $sql="SELECT * FROM messages WHERE id_receiver=$id AND status=0";
+    public static function loadUnreadById($conn, $id)
+    {
+        $sql = "SELECT * FROM messages WHERE id_receiver=$id AND status=0";
 
         $ret = [];
 
@@ -228,18 +259,19 @@ class Message
         return $ret;
     }
 
-    static public function countUnreadByUserId(mysqli $conn, $id){
+    static public function countUnreadByUserId(mysqli $conn, $id)
+    {
 
-        $sql="SELECT * FROM messages WHERE id_receiver=$id AND status=0";
-        $result=$conn->query($sql);
+        $sql = "SELECT * FROM messages WHERE id_receiver=$id AND status=0";
+        $result = $conn->query($sql);
 
-        if ($result==true) {
+        if ($result == true) {
             $counter = $result->num_rows;
 
             return $counter;
         }
 
-            return false;
+        return false;
 
     }
 

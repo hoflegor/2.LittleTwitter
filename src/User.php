@@ -25,13 +25,13 @@ class User
         return $this;
     }
 
-    public function setUsername( $username)
+    public function setUsername($username)
     {
         $this->username = $username;
         return $this;
     }
 
-    public function setEmail( $email)
+    public function setEmail($email)
     {
         $this->email = $email;
         return $this;
@@ -43,7 +43,6 @@ class User
         $this->creationDate = $creationDate;
         return $this;
     }
-
 
 
     public function getId()
@@ -71,101 +70,111 @@ class User
         return $this->email;
     }
 
-    private function saveToDB(mysqli $conn){
-        if ($this->id == -1){
+    private function saveToDB(mysqli $conn)
+    {
+        if ($this->id == -1) {
             //Saving to DB
-            $sql = "INSERT INTO users (username, email, hashed_password) VALUES
-                  ('$this->username', '$this->email', '$this->hashedPassword')";
+            $sql = "INSERT INTO users (username, email, hashed_password, creation_date) VALUES
+                  ('$this->username', '$this->email', '$this->hashedPassword','$this->creationDate')";
 
             $result = $conn->query($sql);
 
-            if ($result == true){
+            if ($result == true) {
                 $this->id = $conn->insert_id;
                 return true;
             }
-        }
-        else{
-            $sql="UPDATE users SET
+        } else {
+            $sql = "UPDATE users SET
                   username='$this->username',
                   email='$this->email',
                   hashed_password='$this->hashedPassword'
                   WHERE id=$this->id";
 
-            $result=$conn->query($sql);
-            if ($result==true){
+            $result = $conn->query($sql);
+            if ($result == true) {
                 return true;
             }
         }
         return false;
     }
 
-    static public function loadByUserId(mysqli $conn, $id){
-        $sql="SELECT * FROM users WHERE id=$id";
-
-        $result=$conn->query($sql);
-
-        if ($result == true){
-            $row=$result->fetch_assoc();
-
-            $loadedUser=new User();
-            $loadedUser->id=$row['id'];
-            $loadedUser->username=$row['username'];
-            $loadedUser->email=$row['email'];
-            $loadedUser->hashedPassword=$row['hashed_password'];
-
-            return $loadedUser;
-
-        }
-        return null;
-    }
-
-    static public function loadByUsername(mysqli $conn, $username){
-        $sql="SELECT * FROM users WHERE username='$username'";
-
-        $result=$conn->query($sql);
-
-        if ($result == true){
-            $row=$result->fetch_assoc();
-
-            $loadedUser=new User();
-            $loadedUser->id=$row['id'];
-            $loadedUser->username=$row['username'];
-            $loadedUser->email=$row['email'];
-            $loadedUser->hashedPassword=$row['hashed_password'];
-
-            return $loadedUser;
-
-        }
-        return null;
-    }
-
-    static public function loadAllUsers(mysqli $conn){
-        $sql="SELECT * FROM users";
-        $ret=[];
+    static public function loadByUserId(mysqli $conn, $id)
+    {
+        $sql = "SELECT * FROM users WHERE id=$id";
 
         $result = $conn->query($sql);
 
-        if ($result==true && $result->num_rows!=0){
-            foreach ($result as $row){
-                $loadedUser = new User();
-                $loadedUser->id=$row['id'];
-                $loadedUser->username=$row['username'];
-                $loadedUser->email=$row['email'];
-                $loadedUser->hashedPassword=$row['hashed_password'];
+        if ($result == true) {
+            $row = $result->fetch_assoc();
 
-                $ret[]=$loadedUser;
+            $loadedUser = new User();
+            $loadedUser->id = $row['id'];
+            $loadedUser->username = $row['username'];
+            $loadedUser->email = $row['email'];
+            $loadedUser->hashedPassword = $row['hashed_password'];
+            $loadedUser->creationDate = $row['creation_date'];
+
+            return $loadedUser;
+
+        }
+        return null;
+    }
+
+    static public function loadByUsername(mysqli $conn, $username)
+    {
+        $sql = "SELECT * FROM users WHERE username='$username'";
+
+        $result = $conn->query($sql);
+
+        if ($result == true) {
+            $row = $result->fetch_assoc();
+
+            $loadedUser = new User();
+            $loadedUser->id = $row['id'];
+            $loadedUser->username = $row['username'];
+            $loadedUser->email = $row['email'];
+            $loadedUser->hashedPassword = $row['hashed_password'];
+            $loadedUser->creationDate = $row['creation_date'];
+
+            return $loadedUser;
+
+        }
+        return null;
+    }
+
+    static public function loadAllUsers(mysqli $conn)
+    {
+        $sql = "SELECT * FROM users";
+        $ret = [];
+
+        $result = $conn->query($sql);
+
+        if ($result == true && $result->num_rows != 0) {
+            foreach ($result as $row) {
+                $loadedUser = new User();
+                $loadedUser->id = $row['id'];
+                $loadedUser->username = $row['username'];
+                $loadedUser->email = $row['email'];
+                $loadedUser->hashedPassword = $row['hashed_password'];
+                $loadedUser->creationDate = $row['creation_date'];
+
+                $ret[] = $loadedUser;
             }
         }
         return $ret;
     }
 
-    public function delete(mysqli $conn){
-        if ($this->id !=1){
-            $sql="DELETE FROM users WHERE id=$this->id";
+    public function delete(mysqli $conn)
+    {
+        if ($this->id != 1) {
+            $sql = "DELETE FROM users WHERE id=$this->id";
 
-            $result=$conn->query($sql);
-            if ($result==true){
-                $this->id=-1;
+            $result = $conn->query($sql);
+
+            var_dump($result);
+
+            if ($result == true) {
+                $this->id = -1;
                 return true;
             }
             return false;
@@ -173,39 +182,53 @@ class User
         return true;
     }
 
-    static public function register (mysqli $conn, $email, $username,
-                                     $password){
+    static public function updatePass(mysqli $conn, $idUser, $newPass){
+        $user= User::loadByUserId($conn, $idUser);
+        $user->setPassword($newPass)->saveToDB($conn);
+
+    }
+
+    static public function register(mysqli $conn, $email, $username,
+                                    $password, $creationDate)
+    {
 
 
-        $sqlEmail="SELECT email FROM users WHERE email = '$email'";
-        $resultEmail=$conn->query($sqlEmail);
+        $sqlEmail = "SELECT email FROM users WHERE email = '$email'";
+        $resultEmail = $conn->query($sqlEmail);
 
-        $sqlName="SELECT username FROM users WHERE username = '$username'";
-        $resultName=$conn->query($sqlName);
+        $sqlName = "SELECT username FROM users WHERE username = '$username'";
+        $resultName = $conn->query($sqlName);
 
-        if($resultName->num_rows==1){
+        if ($resultName->num_rows == 1) {
             echo "<strong>Użytkownik o podanym loginie jest już dodany, innego podanie, to czyn zalecany!!</strong><br>";
             return false;
         }
-        else {
-            if ($resultEmail->num_rows == 0) {
-                $newUser = new User();
-                $newUser->setUsername($username)
-                    ->setEmail($email)
-                    ->setPassword($password);
-                if ($newUser->saveToDB($conn) == true) {
-                    header("refresh:4 ;url=index.php");
-                    echo "<strong><em>$username</em> Właśnie zostałeś zarejestrowany :-) Za 4 sekundy będziesz też zalogowany...
+
+        if ($resultEmail->num_rows == 0) {
+
+            $newUser = new User();
+            $newUser->setUsername($username)
+                ->setEmail($email)
+                ->setPassword($password)
+                ->setCreationDate
+                ($creationDate->format('Y-m-d // H:i:s'));
+            if ($newUser->saveToDB($conn) == true) {
+                header("refresh:4 ;url=login.php");
+                echo "<strong><em>$username</em> ---> Właśnie zostałeś zarejestrowany :-) Za 4 sekundy wpisz dane i będziesz zalogowany...
                             </strong>";
-                    return true;
-                }
-                return false;
-            } else {
-                echo "<strong>Uzytkownik o podanym mailu został już dodany, inny prze Ciebie musi być wpisany!!</strong><br>";
-                return false;
+                return true;
             }
+            return false;
+
+        } else {
+            echo "<strong>Uzytkownik o podanym mailu został już dodany, inny prze Ciebie musi być wpisany!!</strong><br>";
+            return false;
         }
 
+    }
+
+    public function __destruct()
+    {
     }
 
 }

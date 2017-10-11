@@ -93,8 +93,6 @@ class Message
               INSERT INTO messages (id_sender, id_receiver, text, creation_date, status)
               VALUES ($this->senderId, $this->receiverId, '$this->text', '$this->creationDate', $this->status)";
 
-            var_dump($sql);
-
             $result = $conn->query($sql);
 
             if ($result == true) {

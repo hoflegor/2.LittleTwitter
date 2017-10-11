@@ -10,6 +10,7 @@ $queryCreateTableUsers = "
                         username VARCHAR (255) UNIQUE ,
                         email VARCHAR (255) UNIQUE,
                         hashed_password VARCHAR (60),
+                        creation_date DATETIME;
                         PRIMARY KEY (id)
                         )
 ";
@@ -22,6 +23,7 @@ $queryCreateTableTweet ="
                         creation_date DATETIME,
                         PRIMARY KEY (id_tweet),
                         FOREIGN KEY (id_user) REFERENCES users(id)
+                        ON DELETE CASCADE
                         )
 ";
 
@@ -34,7 +36,8 @@ $queryCreateTableComment = "
                           creation_date DATETIME,
                           PRIMARY KEY (id_comment),
                           FOREIGN KEY (id_tweet) REFERENCES tweet(id_tweet)
-                            )
+                          )
+                          ON DELETE CASCADE 
 ";
 
 $queryCreateTableMessage="
@@ -48,5 +51,6 @@ $queryCreateTableMessage="
                         PRIMARY KEY (id_message),
                         FOREIGN KEY (id_sender) REFERENCES users (id),
                         FOREIGN KEY (id_receiver) REFERENCES users (id)
+                        ON DELETE CASCADE
                         )
 ";

@@ -27,11 +27,15 @@
 </form>
 <hr>
 <a href='register.php'>
-    <ins><strong>Tutaj kliknięcie, spowoduje rejestracji rozpoczęcie...</strong></ins></h3></a>
+    <ins><strong>To tutaj kliknięcie, spowoduje rejestracji rozpoczęcie...</strong></ins></h3></a>
 
 <?php
 
 require_once (__DIR__ . "/utils/checkLog.php");
+if ($log['check']==true){
+    header("Location: index.php");
+    die;
+}
 
 require_once (__DIR__ . "/src/User.php");
 
@@ -47,7 +51,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'
     $user = User::loadByUsername($conn, $username);
 
 
-    if ($user && password_verify($password, $user->getHashedPassword())) {
+    if (password_verify($password, $user->getHashedPassword())==true) {
         $_SESSION["loggedUser"] = $username;
         header("Location: index.php");
 
@@ -56,7 +60,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'
         echo "<hr><h2>Błędny login lub hasło podano ;-(</h2>" .
             "<hr><h3>Jeśli ich nie masz, próżno się załamywać,
             <br>
-            trzeba kliknąć poniżej i dane powpisywać!!
+            trzeba kliknąć powyższy link i dane powpisywać!!
             <hr>";
     }
 

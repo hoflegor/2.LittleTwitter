@@ -4,7 +4,7 @@ require_once (__DIR__ . "/checkLog.php");
 
 $name = $log['user'];
 
-require_once (__DIR__ . '/conn.php');
+//require_once (__DIR__ . '/conn.php');
 
 $sql="SELECT id FROM users WHERE username='$name'";
 $result=$conn->query($sql);

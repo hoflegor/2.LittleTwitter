@@ -153,9 +153,10 @@ class Tweet
 
     }
 
-    static public function countComment(mysqli $conn, $tweetId){
 
-        $sql="SELECT * FROM comment WHERE id_tweet=$tweetId";
+    static public function countTweetByUserId(mysqli $conn, $id){
+
+        $sql="SELECT * FROM tweet WHERE id_user=$id";
         $result=$conn->query($sql);
 
         $counter=$result->num_rows;

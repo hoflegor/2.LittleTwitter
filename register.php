@@ -16,10 +16,33 @@
 
 require_once(__DIR__ . '/utils/checkLog.php');
 
-if ($log['check'] == true) {
+if (
+    isset($_POST['email']) == true &&
+    isset($_POST['name']) == true && strlen($_POST['name']) >= 2 &&
+    isset($_POST['password']) == true && strlen($_POST['password']) >= 6 &&
+    $_POST['password'] == $_POST['repeatPassword']
+) {
+
+    require(__DIR__ . "/utils/conn.php");
+    require(__DIR__ . "/src/User.php");
+
+    $email = $conn->real_escape_string($_POST['email']);
+    $users = User::loadAllUsers($conn);
+    $password = $conn->real_escape_string($_POST['password']);
+    $creationDate = new DateTime();
+    $name = $conn->real_escape_string($_POST['name']);
+
+
+    User::register($conn, $email, $name, $password, $creationDate);
+
+    $conn->close();
+    $conn = null;
+
+    die;
+
+} elseif ($log['check'] == true) {
     header("Location: index.php");
-}
-elseif ($_SERVER['REQUEST_METHOD'] == 'POST'
+} elseif ($_SERVER['REQUEST_METHOD'] == 'POST'
     && $_POST['email'] != null
     && $_POST['password'] != null
     && $_POST['name'] != null
@@ -29,28 +52,10 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST'
 
     if ($_POST['password'] != $_POST['repeatPassword']) {
         echo "<strong>Hasła... to pierwsze... i to powtórzone... One nie są z samych znaków złożone!!</strong>";
-    }
-    elseif ($_POST['password'] <6){
+    } elseif (strlen($_POST['password']) < 6) {
         echo "<strong>Hasło z minimum sześciu znaków musi być złożone, tak to już jest ustawione..</strong>";
     }
-    elseif (
-        isset($_POST['email']) == true &&
-        isset($_POST['name']) == true && strlen($_POST['name']) >= 2 &&
-        isset($_POST['password']) == true && strlen($_POST['password']) >= 6 &&
-        $_POST['password'] == $_POST['repeatPassword']
-    ) {
 
-        $email = $conn->real_escape_string($_POST['email']);
-        $users = User::loadAllUsers($conn);
-        $password = $conn->real_escape_string($_POST['password']);
-        $creationDate = new DateTime();
-        $name = $conn->real_escape_string($_POST['name']);
-
-
-        User::register($conn, $email, $name, $password,$creationDate);
-
-
-    }
 
     $conn->close();
     $conn = null;

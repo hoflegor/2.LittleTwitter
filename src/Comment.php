@@ -125,21 +125,7 @@ class Comment
                 $this->id = $conn->insert_id;
                 return true;
             }
-        }
-// else {
-//            $sql = "UPDATE comment SET
-//                  id_user='$this->userId',
-//                  id_tweet='$this->tweetId',
-//                  text='$this->text',
-//                  creation_date='$this->creationDate'
-//                  WHERE id_comment='$id'
-//                  ";
-//
-//            $result = $conn->query($sql);
-//            if ($result == true) {
-//                return true;
-//            }
-        else {
+        } else {
             return false;
         }
     }
@@ -160,21 +146,16 @@ class Comment
 
     }
 
-    static public function countCommentByTweetId(mysqli $conn, $tweetId){
+    static public function countCommentByTweetId(mysqli $conn, $tweetId)
+    {
 
-        $sql="SELECT * FROM comment WHERE id_tweet=$tweetId";
-        $result=$conn->query($sql);
+        $sql = "SELECT * FROM comment WHERE id_tweet=$tweetId";
+        $result = $conn->query($sql);
 
-        $counter=$result->num_rows;
+        $counter = $result->num_rows;
 
         return $counter;
 
     }
 
 }
-
-
-//var_dump(Comment::loadAllCommentsByTweetId($conn, 16));
-//var_dump(Comment::loadCommentById($conn, 2));
-
-//var_dump(Comment::createComment($conn,8,16, 'dsddsdsfsdffs', '2016-06-22 12:22:21'));

@@ -10,6 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' &&
 
     Tweet::createTweet($conn, $id, $tweet, $creationDate);
 
+    echo "<p><strong>Dodałeś nowego tweeta!!</strong> (" . $creationDate->format('Y-m-d H:i:s') . ")</p>";
+
 }
 
 $formNewTweet=<<<EOL
@@ -26,3 +28,4 @@ $formNewTweet=<<<EOL
 EOL;
 
 echo $formNewTweet;
+

@@ -65,28 +65,34 @@ class Message
         return $this->senderId;
     }
 
-    public function getReceiverId()
+
+    public
+    function getReceiverId()
     {
         return $this->receiverId;
     }
 
-    public function getText()
+    public
+    function getText()
     {
         return $this->text;
     }
 
-    public function getCreationDate()
+    public
+    function getCreationDate()
     {
         return $this->creationDate;
     }
 
-    public function getStatus()
+    public
+    function getStatus()
     {
         return $this->status;
     }
 
 
-    public function savToDB(mysqli $conn)
+    public
+    function savToDB(mysqli $conn)
     {
         if ($this->id = -1) {
             $sql = "
@@ -102,7 +108,8 @@ class Message
         }
     }
 
-    static public function loadMessageById(mysqli $conn, $id){
+    static public function loadMessageById(mysqli $conn, $id)
+    {
         $sql = "SELECT * FROM messages WHERE id_message = $id";
 
         $result = $conn->query($sql);
@@ -274,8 +281,3 @@ class Message
     }
 
 }
-//
-//var_dump(Message::newMessage($conn, 8,9,'YesYesYes', '2016-12-20 12:37:18'));
-//Message::newMessage($conn, 8,9,'Proud, cloudy vogons oddly fight a united, neutral klingon,','2016-12-20 12:37:17');
-
-//var_dump(Message::loadAllMessagesSendOrReceive($conn, 8));

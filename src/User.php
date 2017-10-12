@@ -182,8 +182,9 @@ class User
         return true;
     }
 
-    static public function updatePass(mysqli $conn, $idUser, $newPass){
-        $user= User::loadByUserId($conn, $idUser);
+    static public function updatePass(mysqli $conn, $idUser, $newPass)
+    {
+        $user = User::loadByUserId($conn, $idUser);
         $user->setPassword($newPass)->saveToDB($conn);
 
     }
@@ -227,36 +228,4 @@ class User
 
     }
 
-    public function __destruct()
-    {
-    }
-
 }
-
-//$newUser = new User();
-//$newUser->setUsername("Hoff");
-//$newUser->setEmail("fake@lorem.eu");
-//$newUser->setPassword("qwerta1234");
-//$newUser->saveToDB($conn);
-//
-//$newUser = new User();
-//$newUser->setUsername("ThatMan");
-//$newUser->setEmail("fake@ipsum.eu");
-//$newUser->setPassword("lalalalal");
-//$newUser->saveToDB($conn);
-//
-//var_dump (User::loadByUserId($conn,1));
-//var_dump (User::loadByUserId($conn,2));
-//var_dump (User::loadByUserId($conn,666));
-//
-//var_dump(User::loadAllUsers($conn));
-//
-//User::loadByUserId($conn,1)
-//    ->setUsername("Me")->setEmail('new@mail.com')->setPassword('abcd')
-//    ->saveToDB($conn);
-//
-//var_dump(User::loadByUserId($conn,1));
-
-//User::loadByUserId($conn,5)->delete($conn);
-
-//var_dump(User::loadByUserUsername($conn,'Mikey'));

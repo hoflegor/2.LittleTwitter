@@ -1,6 +1,6 @@
 <?php
 
-$title="LittelTwitter - wiadomości";
+$title="LittleTwitter - wiadomości";
 
 require_once(__DIR__ . '/templates/header.php');
 

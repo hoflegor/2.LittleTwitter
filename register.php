@@ -61,6 +61,14 @@ if (
     $conn = null;
 
 }
+elseif ($_SERVER['REQUEST_METHOD'] == 'POST'
+|| $_POST['email'] = null
+|| $_POST['password'] = null
+|| $_POST['name'] = null){
+
+    echo "<strong>Wszystkie pola muszą być wypełnione, tak to już jest ustawione...</strong>";
+
+}
 
 ?>
 

@@ -1,0 +1,1 @@
+# Trening - PhpOOP & MySQL
